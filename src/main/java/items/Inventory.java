@@ -31,7 +31,7 @@ public class Inventory
         // rhs's size is needed
         // lhs.????(rhs.????)
         lhs.addItems(rhs.size());
-        
+        return;
     }
 
     /**
@@ -96,7 +96,7 @@ public class Inventory
     public boolean isFull()
     {
         // Replace the next line
-        return this.slots.currentSize == capacity;
+        return this.slots.currentSize == this.capacity;
     }
 
     /**
@@ -120,7 +120,15 @@ public class Inventory
     public ItemStack findMatchingItemStack(ItemStack key)
     {
         // Add the necessary sequential search loop
+        LinkedList.Node<ItemStack> it = this.slots.head;
 
+        while(it != null){
+            if (it.data.equals(key))
+                return it.data;
+            
+            it = it.next;
+        }
+        // No match was found
         return null;
     }
 
@@ -128,6 +136,9 @@ public class Inventory
      * This is the standard Linked List append operation from Review 01
      *
      * @param toAdd data that we want to store in a Node and add to the list
+     * 
+     * @return is from void return type instead of boolean as in add method 
+     * from LinkedList class in Review 01
      */
     public void addItemStackNoCheck(ItemStack toAdd)
     {
@@ -135,6 +146,33 @@ public class Inventory
 
         // Use the appendNode/add logic from Review 1 as your starting point
         // Once we reach this function... we know that `toAdd` must be stored
+
+        // If adding the first node
+        if (this.slots.head == null){
+            this.slots.head         = newNode;
+            this.slots.tail         = newNode;
+            this.slots.currentSize  = 1;
+
+            // best practice to clear input variable to aid in 
+            // catching and debugging errors
+            newNode = null;
+
+            return;
+        }
+
+        // Link the Node newNode to the end
+        // of the existing list
+        this.slots.tail.next = newNode;
+
+        // Update tail
+        this.slots.tail = this.slots.tail.next;
+
+        // Increment size
+        ++this.slots.currentSize;
+
+        return;
+
+
     }
 
     /**
